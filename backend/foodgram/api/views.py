@@ -1,10 +1,11 @@
 from api.filters import IngredientFilter, RecipeFilter
+from api.mixins import GetObjectMixin, PermissionAndPaginationMixin
 from api.pagination import LimitFieldPagination
-from api.permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
+from api.permissions import IsAuthorOrAdminOrReadOnly
 from api.serializers import (CustomUserSerializer, IngredientSerializer,
                              RecipeSerializer, RecipeWriteSerializer,
-                             SubscribeRecipeSerializer, SubscribeSerializer,
-                             SubscriptionSerializer, TagSerializer)
+                             SubscribeSerializer, SubscriptionSerializer,
+                             TagSerializer)
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.db.models.aggregates import Count
@@ -12,6 +13,7 @@ from django.db.models.expressions import Value
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -21,29 +23,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Ingredient, Recipe, RecipeIngredient, Tag
-
 User = get_user_model()
-
-
-class GetObjectMixin:
-    """Миксин для удаления/добавления рецептов избранных/корзины."""
-
-    serializer_class = SubscribeRecipeSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self):
-        recipe_id = self.kwargs['recipe_id']
-        recipe = get_object_or_404(Recipe, id=recipe_id)
-        self.check_object_permissions(self.request, recipe)
-        return recipe
-
-
-class PermissionAndPaginationMixin:
-    """Миксин для списка тегов и ингридиентов."""
-
-    permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = None
 
 
 class TagViewSet(
@@ -104,9 +84,9 @@ class AddAndDeleteSubscribe(
         return self.request.user.follower.select_related(
             'following'
         ).prefetch_related(
-            'following__recipe'
+            'following__recipes'
         ).annotate(
-            recipes_count=Count('following__recipe'),
+            recipes_count=Count('following__recipes'),
             is_subscribed=Value(True), )
 
     def get_object(self):
@@ -234,5 +214,4 @@ class DownloadShoppingCart(viewsets.ModelViewSet):
             recipe__cart__user=request.user).values(
             'ingredient__name', 'ingredient__measurement_unit').order_by(
                 'ingredient__name').annotate(ingredient_total=Sum('amount'))
-        print(result)
         return self.download_pdf(result)

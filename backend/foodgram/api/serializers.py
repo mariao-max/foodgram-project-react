@@ -100,7 +100,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
         many=True,
         required=True,
-        source='recipe')
+        source='ingredient_recipe')
     tags = TagSerializer(many=True, required=True)
     image = serializers.ImageField(required=True)
     is_favorited = serializers.SerializerMethodField()
@@ -290,9 +290,9 @@ class SubscriptionSerializer(UserSerializer):
     def get_recipes(self, obj):
         try:
             limit = self.context['request'].query_params['recipes_limit']
-            quantity_recipe = obj.recipe.all()[:int(limit)]
+            quantity_recipe = obj.recipes.all()[:int(limit)]
         except Exception:
-            quantity_recipe = obj.recipe.all()
+            quantity_recipe = obj.recipes.all()
         serializer = PreviewRecipeSerializer(
             instance=quantity_recipe,
             many=True,
@@ -303,5 +303,5 @@ class SubscriptionSerializer(UserSerializer):
         return serializer.data
 
     def get_recipes_count(self, obj):
-        quantity_recipe = obj.recipe.all()
+        quantity_recipe = obj.recipes.all()
         return quantity_recipe.count()
