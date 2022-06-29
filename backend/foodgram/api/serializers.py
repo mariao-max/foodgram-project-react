@@ -2,8 +2,10 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Subscribe, Tag
 from rest_framework import serializers
+
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Subscribe, Tag
+
 
 User = get_user_model()
 
@@ -100,7 +102,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
         many=True,
         required=True,
-        source='ingredient_recipe')
+        source='ingredient_in_recipe')
     tags = TagSerializer(many=True, required=True)
     image = serializers.ImageField(required=True)
     is_favorited = serializers.SerializerMethodField()
@@ -182,11 +184,14 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return ingredients
 
     def create_ingredients(self, ingredients, recipe):
-        for ingredient in ingredients:
-            RecipeIngredient.objects.create(
+        create_ingredient = [
+            RecipeIngredient(
                 recipe=recipe,
-                ingredient_id=ingredient.get('id'),
-                amount=ingredient.get('amount'), )
+                ingredient=Ingredient.objects.get(pk=ingredient["id"]),
+                amount=ingredient['amount']
+            )
+            for ingredient in ingredients]
+        RecipeIngredient.objects.bulk_create(create_ingredient)
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
