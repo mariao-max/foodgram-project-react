@@ -6,7 +6,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='12345')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*", 'localhost']
+ALLOWED_HOSTS = ["*", 'localhost', '84.252.142.228']
 
 AUTH_USER_MODEL = 'users.User'
 
