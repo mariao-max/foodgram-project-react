@@ -102,7 +102,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
         many=True,
         required=True,
-        source='ingredient_in_recipe')
+        source='ingredients_in_recipe')
     tags = TagSerializer(many=True, required=True)
     image = serializers.ImageField(required=True)
     is_favorited = serializers.SerializerMethodField()
