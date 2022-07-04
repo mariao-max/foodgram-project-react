@@ -32,13 +32,10 @@ docker-compose exec backend python manage.py csv
 
 ## Проект доступен по следующим ссылкам:
 
-* http://foodgram.co.vu - главная страница
+* http://yourfoodgram.ddns.net - главная страница
 
 
-* http://foodgram.co.vu/admin/ - админ-панель
-
-
-* http://foodgram.co.vu/api/docs/ - redoc.html
+* http://yourfoodgram.ddns.net/admin/ - админ-панель
 
 
 Автор бэкенда: Одринская Мария
