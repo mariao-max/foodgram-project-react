@@ -133,9 +133,10 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     """
     Сериализатор для создания рецептов.
     """
-    image = Base64ImageField(
-        max_length=None,
-        use_url=True)
+#     image = Base64ImageField(
+#         max_length=None,
+#         use_url=True)
+    image = Base64ImageField()
     tags = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Tag.objects.all())
