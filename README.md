@@ -37,4 +37,6 @@ docker-compose exec backend python manage.py csv
 
 * http://yourfoodgram.ddns.net/admin/ - админ-панель
 
+* http://yourfoodgram.ddns.net/api/ - апи для foodgram
+
 Автор бэкенда: Одринская Мария.
