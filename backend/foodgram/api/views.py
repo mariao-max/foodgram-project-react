@@ -18,11 +18,11 @@ from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import GetObjectMixin, PermissionAndPaginationMixin
 from api.pagination import LimitFieldPagination
 from api.permissions import IsAuthorOrAdminOrReadOnly
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from api.serializers import (CustomUserSerializer, IngredientSerializer,
                              RecipeSerializer, RecipeWriteSerializer,
                              SubscribeSerializer, SubscriptionSerializer,
-                             TagSerializer)
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
+                             TagSerializer,UserPasswordSerializer)
 
 User = get_user_model()
 
@@ -216,3 +216,19 @@ class DownloadShoppingCart(viewsets.ModelViewSet):
             'ingredient__name', 'ingredient__measurement_unit').order_by(
                 'ingredient__name').annotate(ingredient_total=Sum('amount'))
         return self.download_pdf(result)
+
+@api_view(['post'])
+def set_password(request):
+    """Изменить пароль."""
+
+    serializer = UserPasswordSerializer(
+        data=request.data,
+        context={'request': request})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {'message': 'Пароль изменен!'},
+            status=status.HTTP_201_CREATED)
+    return Response(
+        {'error': 'Введите верные данные!'},
+        status=status.HTTP_400_BAD_REQUEST)
