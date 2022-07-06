@@ -13,8 +13,6 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('date_joined', 'email', 'first_name')
     empty_value_display = '-пусто-'
 
-
-class PasswordUserAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.password = make_password(obj.password)
         obj.user = request.user
@@ -22,4 +20,3 @@ class PasswordUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(User, PasswordUserAdmin)
