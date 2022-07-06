@@ -19,11 +19,11 @@ from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import GetObjectMixin, PermissionAndPaginationMixin
 from api.pagination import LimitFieldPagination
 from api.permissions import IsAuthorOrAdminOrReadOnly
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from api.serializers import (CustomUserSerializer, IngredientSerializer,
                              RecipeSerializer, RecipeWriteSerializer,
                              SubscribeSerializer, SubscriptionSerializer,
                              TagSerializer, UserPasswordSerializer)
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 
 User = get_user_model()
 
