@@ -1,4 +1,6 @@
-from django.contrib.auth import get_user_model
+import django.contrib.auth.password_validation as validators
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -311,6 +313,7 @@ class SubscriptionSerializer(UserSerializer):
     def get_recipes_count(self, obj):
         quantity_recipe = obj.recipes.all()
         return quantity_recipe.count()
+
 
 class UserPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(

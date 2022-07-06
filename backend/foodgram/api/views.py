@@ -10,6 +10,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from rest_framework import generics, status, viewsets
+from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
@@ -216,6 +217,7 @@ class DownloadShoppingCart(viewsets.ModelViewSet):
             'ingredient__name', 'ingredient__measurement_unit').order_by(
                 'ingredient__name').annotate(ingredient_total=Sum('amount'))
         return self.download_pdf(result)
+
 
 @api_view(['post'])
 def set_password(request):
