@@ -23,7 +23,7 @@ from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from api.serializers import (CustomUserSerializer, IngredientSerializer,
                              RecipeSerializer, RecipeWriteSerializer,
                              SubscribeSerializer, SubscriptionSerializer,
-                             TagSerializer,UserPasswordSerializer)
+                             TagSerializer, UserPasswordSerializer)
 
 User = get_user_model()
 
