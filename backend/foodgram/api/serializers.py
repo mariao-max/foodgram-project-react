@@ -1,6 +1,4 @@
-import django.contrib.auth.password_validation as validators
-from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -10,7 +8,6 @@ from recipes.models import Ingredient, Recipe, RecipeIngredient, Subscribe, Tag
 
 
 User = get_user_model()
-ERR_MSG = 'Не удается войти в систему с предоставленными учетными данными.'
 
 
 class CustomUserSerializer(UserCreateSerializer):
@@ -313,31 +310,3 @@ class SubscriptionSerializer(UserSerializer):
     def get_recipes_count(self, obj):
         quantity_recipe = obj.recipes.all()
         return quantity_recipe.count()
-
-
-class UserPasswordSerializer(serializers.Serializer):
-    new_password = serializers.CharField(
-        label='Новый пароль')
-    current_password = serializers.CharField(
-        label='Текущий пароль')
-
-    def validate_current_password(self, current_password):
-        user = self.context['request'].user
-        if not authenticate(
-                username=user.email,
-                password=current_password):
-            raise serializers.ValidationError(
-                ERR_MSG, code='authorization')
-        return current_password
-
-    def validate_new_password(self, new_password):
-        validators.validate_password(new_password)
-        return new_password
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        password = make_password(
-            validated_data.get('new_password'))
-        user.password = password
-        user.save()
-        return validated_data
