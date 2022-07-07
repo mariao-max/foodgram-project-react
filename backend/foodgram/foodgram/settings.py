@@ -4,7 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.environ.get('SECRET_KEY', default='12345')
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*", 'localhost', '84.252.142.228', 'yourfoodgram.ddns.net']
 
